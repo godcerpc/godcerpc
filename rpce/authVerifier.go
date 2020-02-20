@@ -21,6 +21,10 @@ func (a AuthVerifier) SizeOf() int {
 	return len(a.Bytes())
 }
 
+func (a AuthVerifier) ValueSize() int {
+	return len(a.AuthValue)
+}
+
 func (a AuthVerifier) Bytes() []byte {
 	buff := bytes.Buffer{}
 
@@ -44,4 +48,9 @@ func NewAuthVerifier(authType SecurityProviders, authLevel AuthLevel, contextID 
 	}
 
 	return r
+}
+
+func (a *AuthVerifier) UpdatePadding(v int) {
+	a.Align = make([]byte, v)
+	a.AuthPadLength = byte(v)
 }
