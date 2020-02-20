@@ -4,7 +4,7 @@ import (
 	"golang.org/x/text/encoding/unicode"
 )
 
-func EncodeWcharString(in string) (out []byte, num int) {
+func EncodeWcharString(in string) (out []byte) {
 	// wchar_t designates a wide character type. It is treated as an unsigned short by using the rules for an unsigned short
 	// A string attribute can be applied to a pointer or array of type wchar_t. This indicates a string of wide characters, as specified in [C706] section 14.3.4.
 
@@ -18,14 +18,9 @@ func EncodeWcharString(in string) (out []byte, num int) {
 	maxCount, actualCount := uint64(len(in)+1), uint64(len(in)+1)
 	offset := uint64(0)
 
-	toAppend, _ := EncodeUint(maxCount)
-	out = append(out, toAppend...)
-
-	toAppend, _ = EncodeUint(offset)
-	out = append(out, toAppend...)
-
-	toAppend, _ = EncodeUint(actualCount)
-	out = append(out, toAppend...)
+	out = append(out, EncodeUint(maxCount)...)
+	out = append(out, EncodeUint(offset)...)
+	out = append(out, EncodeUint(actualCount)...)
 
 	encoding := unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM)
 	encoder := encoding.NewEncoder()
@@ -37,6 +32,5 @@ func EncodeWcharString(in string) (out []byte, num int) {
 
 	// The terminator for a wide character string is two octets of zero
 	out = append(out, []byte{0x00, 0x00}...)
-	num = len(out)
 	return
 }

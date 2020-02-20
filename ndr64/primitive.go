@@ -17,13 +17,12 @@ import (
 // my head hurts
 
 // EncodeUint returns a byte slice containing the relevant NDR64 representation of any unsigned integer, and an int containing the number of bytes written
-func EncodeUint(in interface{}) (out []byte, num int) {
+func EncodeUint(in interface{}) (out []byte) {
 	buf := new(bytes.Buffer)
 
 	switch in.(type) {
 	case uint8, uint16, uint32, uint64:
 		binary.Write(buf, binary.LittleEndian, in)
-		num = buf.Len()
 		out = buf.Bytes()
 	default:
 		panic(fmt.Errorf("Type %T is not a uint", in))

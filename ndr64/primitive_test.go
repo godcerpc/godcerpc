@@ -1,23 +1,25 @@
 package ndr64
 
 import (
+	"bytes"
+
 	"testing"
 )
 
 func TestEncodeUint(t *testing.T) {
 	testCases := []struct {
 		in   interface{}
-		want int
+		want []byte
 	}{
-		{uint8(0x01), 1},
-		{uint16(0x0123), 2},
-		{uint32(0x01234567), 4},
-		{uint64(0x0123456789abcdef), 8},
+		{uint8(0x01), []byte{0x01}},
+		{uint16(0x0123), []byte{0x23, 0x01}},
+		{uint32(0x01234567), []byte{0x67, 0x45, 0x23, 0x01}},
+		{uint64(0x0123456789abcdef), []byte{0xef, 0xcd, 0xab, 0x89, 0x67, 0x45, 0x23, 0x01}},
 	}
 	for _, tc := range testCases {
-		gotBytes, gotNum := EncodeUint(tc.in)
-		if len(gotBytes) != tc.want || gotNum != tc.want {
-			t.Errorf("Wanted len %v, got: %v and %v", tc.want, len(gotBytes), gotNum)
+		gotBytes := EncodeUint(tc.in)
+		if bytes.Compare(tc.want, gotBytes) != 0 {
+			t.Fail()
 		}
 	}
 }
