@@ -13,3 +13,14 @@ func TestEncodeWcharString(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestEncodeStruct(t *testing.T) {
+	thinger := struct {
+		lol    uint16
+		loller string
+	}{
+		uint16(1234),
+		"yolo",
+	}
+	EncodeStruct(thinger)
+}

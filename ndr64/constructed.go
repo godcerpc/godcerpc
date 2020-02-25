@@ -1,7 +1,9 @@
 package ndr64
 
 import (
+	"fmt"
 	"golang.org/x/text/encoding/unicode"
+	"reflect" // FIXME: Refactor everything to use reflection
 )
 
 func EncodeWcharString(in string) (out []byte) {
@@ -32,5 +34,26 @@ func EncodeWcharString(in string) (out []byte) {
 
 	// The terminator for a wide character string is two octets of zero
 	out = append(out, []byte{0x00, 0x00}...)
+	return
+}
+
+func EncodeStruct(in interface{}) (out []byte) {
+	inVal := reflect.ValueOf(in)
+	if inVal.Kind() != reflect.Struct {
+		panic(fmt.Errorf("Expected a struct, got %v", in))
+	}
+
+	// Embedded pointer rules: https://pubs.opengroup.org/onlinepubs/9629399/chap14.htm#tagcjh_19_03_12_03
+	/*
+		Algo for handling embedded pointers:
+		1. get type of struct elem
+		2. if elem is a pointer, encode refId into byte slice and add referent to a FIFO queue
+		3.
+	*/
+
+	for i := 0; i < inVal.NumField(); i++ {
+		tempVal := inVal.Field(i)
+
+	}
 	return
 }
