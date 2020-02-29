@@ -7,7 +7,7 @@ import (
 // Top-level pointers that appear in parameter lists default to [ref] pointers (MIDL syntax)
 
 // Unique pointers are transmitted as full pointers.
-func EncodeUniqPtr(refId uint64, referent interface{}) (out []byte) {
+func encodeUniqPtr(refId uint64, referent interface{}) (out []byte) {
 	// TODO: Handle subsequent instances of the same pointer (i.e. aliasing)
 	// TODO: Handle embedded pointers
 	// FIXME: Ok this is a bad way of doing it. Yolo though for now
